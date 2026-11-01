@@ -24,19 +24,19 @@ long long ratio(long long hp, long long max_hp) {
         return -1;
     }
     if (hp < 0){
-        return hp =0;
+        hp =0;//健康值限制不能直接 return
     }
     else if (hp > max_hp){
-        return hp =max_hp;
+        hp = max_hp;
     }
-    return hp / max_hp * 100;
+    return hp * 100 / max_hp;//百分比要先乘再除，否则 2 / 3 会先变成 0
 }
 using namespace std;
 std::string report(int id, long long hp, long long max_hp, int battery) {
     long long hp_ratio = ratio(hp, max_hp);
     string hp_str;
     if (hp_ratio == -1){
-
+        hp_str = "INVALID";
     }
     else {
         hp_str = to_string(hp_ratio);

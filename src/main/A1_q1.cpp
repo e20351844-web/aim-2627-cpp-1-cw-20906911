@@ -18,8 +18,47 @@ namespace aim::q1 {
 
 
 // BEGIN IMPLEMENTATION
-long long ratio(long long hp, long long max_hp) { throw std::runtime_error("TODO"); }
-std::string report(int id, long long hp, long long max_hp, int battery) { throw std::runtime_error("TODO"); }
+//分两步，写两个函数，ratio先写，后面判断状态能用
+long long ratio(long long hp, long long max_hp) {
+    if (max_hp <= 0){
+        return -1;
+    }
+    if (hp < 0){
+        return hp =0;
+    }
+    else if (hp > max_hp){
+        return hp =max_hp;
+    }
+    return hp / max_hp * 100;
+}
+using namespace std;
+std::string report(int id, long long hp, long long max_hp, int battery) {
+    long long hp_ratio = ratio(hp, max_hp);
+    string hp_str;
+    if (hp_ratio == -1){
+
+    }
+    else {
+        hp_str = to_string(hp_ratio);
+    }
+    if (battery < 0){
+        battery = 0;
+    }
+    else if (battery > 100){
+        battery = 100;
+    }
+    string state;
+    if (battery >=60){
+        state = "OK";
+    }
+    else if (battery >= 20){
+        state = "WARNING";
+    }
+    else {
+        state = "LOW";
+    }
+    return "ID=" + to_string(id) + ";HP=" + hp_str + ";BAT=" + to_string(battery) + ";STATE=" + state;
+}
 // END IMPLEMENTATION
 }
 

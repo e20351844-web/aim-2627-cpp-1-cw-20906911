@@ -18,7 +18,33 @@ namespace aim::q3 {
 
 
 // BEGIN IMPLEMENTATION
-std::vector<int> alarms(const std::vector<int>& values, int k, long long threshold) { throw std::runtime_error("TODO"); }
+std::vector<int> alarms(const std::vector<int>& values, int k, long long threshold) {
+    using namespace std;
+    vector<int> result;
+    int n = values.size();
+    //1.处理非法输入
+    if (k < 1 or k > n){
+        return result;
+    }
+    //2.计算第一个窗口的和
+    //记得先给current_sum设置一个初始值，防止乱码
+    long long current_sum = 0;
+    for (int i = 0; i < k; i++){
+        current_sum += values[i];
+    }
+    //3.先检查第一个窗口长度是否大于threshold
+    if (current_sum > threshold){
+        result.push_back(k - 1);
+    }
+    //4.滑动窗口
+    for (int i = k; i < n; i++){
+        current_sum += values[i] - values[i - k];
+        if (current_sum > threshold){//严格大于阈值才报警
+            result.push_back(i);
+        }
+    }
+    return result;
+}
 // END IMPLEMENTATION
 }
 

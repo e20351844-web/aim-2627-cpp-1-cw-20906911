@@ -55,6 +55,7 @@ std::string edit_labels(std::string labels, const std::vector<LabelEdit>& edits)
         else{
         
         }
+    }
         //把数组重新拼接成字符串
         string result = "";
         for (size_t i = 0; i < vec.size(); ++i){
@@ -63,8 +64,7 @@ std::string edit_labels(std::string labels, const std::vector<LabelEdit>& edits)
             }
             result += vec[i];
         }
-        return result;
-    }
+        return result; 
 }
 // END IMPLEMENTATION
 }

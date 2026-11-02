@@ -18,7 +18,54 @@ namespace aim::q2 {
 struct LabelEdit { std::string from; std::string to; };
 
 // BEGIN IMPLEMENTATION
-std::string edit_labels(std::string labels, const std::vector<LabelEdit>& edits) { throw std::runtime_error("TODO"); }
+using namespace std;
+std::string edit_labels(std::string labels, const std::vector<LabelEdit>& edits) {
+    vector<string> vec;
+    //开始切割原始字符串
+    if (!labels.empty()){
+        stringstream ss(labels);
+        string str;
+        while (getline(ss,str,',')){
+            vec.push_back(str);
+        }
+    }
+    //按照edits挨个执行操作
+    for (const auto& edit:edits){
+        //情况一：from为空，to不为空，追加
+        if (edit.from.empty() && !edit.to.empty()){
+            //追加
+            vec.push_back(edit.to);
+        }
+        //情况二：from不为空，to为空，删除
+        else if(!edit.from.empty()){
+            //查找删除和替换
+            for (auto it = vec.begin(); it != vec.end();++it){
+                if (*it ==edit.from){
+                    if (edit.to.empty()){
+                        vec.erase(it);
+                    }
+                    else{
+                        *it = edit.to;
+                    }
+                    break;
+                }
+            }
+        }
+        //情况三：from和to都为空，什么都不做
+        else{
+        
+        }
+        //把数组重新拼接成字符串
+        string result = "";
+        for (size_t i = 0; i < vec.size(); ++i){
+            if (i != 0){
+                result += ",";
+            }
+            result += vec[i];
+        }
+        return result;
+    }
+}
 // END IMPLEMENTATION
 }
 

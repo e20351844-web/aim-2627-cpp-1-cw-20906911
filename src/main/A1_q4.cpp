@@ -18,7 +18,65 @@ namespace aim::q4 {
 struct CommandResult { long long value; int accepted; int rejected; };
 
 // BEGIN IMPLEMENTATION
-CommandResult execute(const std::vector<std::string>& lines) {}
+CommandResult execute(const std::vector<std::string>& lines) {
+    using  namespace std;
+    //初始化返回值
+    long long value = 0;
+    int accepted = 0;
+    int rejected = 0;
+    //逐条读取命令
+    for (const auto& line : lines) {
+        istringstream input(line);
+        string command;
+        //处理空字符串或只有空格的行
+        if (!(input >> command)) {
+            rejected++;
+            continue;
+        }
+        bool valid = false;
+        long long candidate =  value;
+        string extra;
+        //识别命令名称并处理
+        if (command == "ADD" or command == "SET"){
+            long long x;
+            //尝试读取参数x，并检查尾部是否有多余内容
+            if ((input) >> x && !(input >> extra)){
+                //检查参数x的范围
+                if(x >= -1000000 && x <= 1000000){
+                    if (command == "ADD"){
+                        candidate += x;
+                    }
+                    else{
+                        candidate = x;
+                    }
+                    //检查计算后的最终值是否在范围内
+                    if(candidate >= -1000000 && candidate <= 1000000){
+                        valid = true;
+                    }       
+                }
+                    
+            }
+      
+        }
+        else if (command == "RESET"){
+            //RESET命令不允许有参数，检查是否还能读取到其他内容
+            if (!(input >> extra)){
+                candidate = 0;
+                valid = true;
+            }
+        }
+        if (valid){
+            value = candidate;
+            accepted++;
+        }
+        else{
+            rejected++;
+        }
+
+        
+    }
+    return {value, accepted, rejected};
+}
 // END IMPLEMENTATION
 }
 

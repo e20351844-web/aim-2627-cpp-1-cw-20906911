@@ -18,7 +18,43 @@ namespace aim::q6 {
 struct Target { int id; int x; int y; int hp; bool visible; };
 
 // BEGIN IMPLEMENTATION
-int select_target(const std::vector<Target>& targets, int max_range) { throw std::runtime_error("TODO"); }
+int select_target(const std::vector<Target>& targets, int max_range) {
+    using namespace std;
+    using WideInt = long long;
+    if (max_range < 0 || targets.empty()) {
+        return -1;
+    }
+    const WideInt range_squared =
+    static_cast<WideInt>(max_range) *
+    static_cast<WideInt>(max_range);
+    //保存当前最佳目标
+    bool found_target = false;
+    int best_id = -1;
+    int best_hp = 0;
+    WideInt best_distance_squared = 0;
+    //遍历检查目标
+    for (const Target& target : targets) {
+        const WideInt x = target.x;
+        const WideInt y = target.y;
+        const WideInt distance_squared = x * x + y * y;
+        if (target.visible == true && target.hp > 0 && distance_squared <= range_squared){
+            best_id = target.id;
+            best_hp = target.hp;
+        }else {
+            continue;
+        }
+        if (target.hp < best_hp) {
+            best_id = target.id;
+            best_hp = target.hp;
+        } else if (target.hp == best_hp && distance_squared < best_distance_squared) {
+            best_id = target.id;
+            best_distance_squared = distance_squared;
+        }else if (target.hp == best_hp && distance_squared == best_distance_squared && target.id < best_id) {
+            best_id = target.id;
+        }
+    }
+    return best_id;
+}
 // END IMPLEMENTATION
 }
 

@@ -19,7 +19,34 @@ struct Telemetry { int id; int hp; };
 struct Summary { int valid; int duplicate; int invalid; long long total_hp; std::vector<int> ids; };
 
 // BEGIN IMPLEMENTATION
-Summary summarize(const std::vector<Telemetry>& frames) { throw std::runtime_error("TODO"); }
+Summary summarize(const std::vector<Telemetry>& frames) {
+    Summary res{0, 0, 0, 0, {}};
+    std::vector<bool> seen(10000, false);//记录编号是否已出现过
+    for (const auto& frame : frames) {
+        //范围验证：id必须在0-9999之间，hp必须在-1000到1000之间
+        //只要有一个不符合要求，就算作invalid
+        if (frame.id < 0 || frame.id > 9999 || frame.hp < -1000 || frame.hp > 1000) {
+            ++res.invalid;
+            continue;
+        } 
+        //判断重复，完全合法后才去查标记表
+        if (seen[frame.id]){
+            res.duplicate++;
+            continue;
+        }
+        //首次处理合法记录
+        res.valid++;
+        seen[frame.id] = true;
+        int clamped_hp = std::max(0, std::min(100, frame.hp)); //将hp限制在0-100之间
+        res.total_hp += clamped_hp;
+    }
+    for (int i = 0; i <= 9999;++i){
+        if (seen[i]){
+            res.ids.push_back(i);
+        }
+    }
+    return res;
+}
 // END IMPLEMENTATION
 }
 

@@ -43,7 +43,13 @@ int select_target(const std::vector<Target>& targets, int max_range) {
         }else {
             continue;
         }
-        if (target.hp < best_hp) {
+
+        if (!found_target || target.hp < best_hp ||
+            (target.hp == best_hp &&
+             (distance_squared < best_distance_squared ||
+              (distance_squared == best_distance_squared &&
+               target.id < best_id)))) {
+            found_target = true;
             best_id = target.id;
             best_hp = target.hp;
         } else if (target.hp == best_hp && distance_squared < best_distance_squared) {

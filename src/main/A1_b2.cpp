@@ -18,7 +18,22 @@ namespace aim::b2 {
 
 
 // BEGIN IMPLEMENTATION
-std::size_t compact(int* data, std::size_t n, int low, int high) { throw std::runtime_error("TODO"); }
+std::size_t compact(int* data, std::size_t n, int low, int high) {
+    if (n == 0 || low > high) {
+        return 0;
+    }
+
+    std::size_t write = 0;
+
+    for (std::size_t read = 0; read < n; ++read) {
+        if (data[read] >= low && data[read] <= high) {
+            data[write] = data[read];
+            ++write;
+        }
+    }
+
+    return write;
+}
 // END IMPLEMENTATION
 }
 
